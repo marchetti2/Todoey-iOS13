@@ -8,12 +8,18 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class TableListViewController: UITableViewController {
+    
+    let todoArray = ["find Mike", "buy eggos", "destroy demogorgon"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return todoArray.count
+    }
+    
 
 
 }
