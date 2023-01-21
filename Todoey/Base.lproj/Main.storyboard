@@ -31,7 +31,18 @@
                             <outlet property="delegate" destination="0sY-1H-5tY" id="nBt-Zs-J1p"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Todoey" id="wpw-nO-g9r"/>
+                    <toolbarItems>
+                        <barButtonItem title="Item" id="Z9k-ML-usr"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Todoey" id="wpw-nO-g9r">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Ghg-ci-4R5">
+                            <color key="tintColor" systemColor="tintColor"/>
+                            <connections>
+                                <action selector="addTodo:" destination="0sY-1H-5tY" id="6QR-Aa-Jyg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R95-cc-Yxf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -45,9 +56,9 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="nOH-Er-b2U">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" systemColor="tintColor"/>
+                        <color key="barTintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="textColor" systemColor="tintColor"/>
                         </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
