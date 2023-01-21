@@ -16,9 +16,9 @@ class TableListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        if let items = self.defaults.array(forKey: "todoArray") as? [String] {
-//            self.todoArray = items
-//        }
+        //        if let items = self.defaults.array(forKey: "todoArray") as? [String] {
+        //            self.todoArray = items
+        //        }
         
         let newItem = Item()
         newItem.title = "Find Mike"
@@ -43,7 +43,13 @@ class TableListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = todoArray[indexPath.row].title
+        
+        let item = todoArray[indexPath.row]
+        
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
+        
         return cell
     }
     
@@ -53,12 +59,9 @@ class TableListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        todoArray[indexPath.row].done = !todoArray[indexPath.row].done
         
+        tableView.reloadData()
     }
     
     //MARK Add new items
