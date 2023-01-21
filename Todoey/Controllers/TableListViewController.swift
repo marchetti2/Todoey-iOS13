@@ -10,17 +10,29 @@ import UIKit
 
 class TableListViewController: UITableViewController {
     
-    var todoArray = ["find Mike", "buy eggos", "destroy demogorgon"]
+    var todoArray = [Item]()
     
-    let defaults = UserDefaults()
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let items = self.defaults.array(forKey: "todoArray") as? [String] {
-            self.todoArray = items
-        }
+//        if let items = self.defaults.array(forKey: "todoArray") as? [String] {
+//            self.todoArray = items
+//        }
+        
+        let newItem = Item()
+        newItem.title = "Find Mike"
+        
+        let newItem2 = Item()
+        newItem2.title = "buy eggos"
+        
+        let newItem3 = Item()
+        newItem3.title = "Destroy Demogorgon"
+        
+        todoArray.append(newItem)
+        todoArray.append(newItem2)
+        todoArray.append(newItem3)
     }
-    
     
     //MARK UITableViewDataSource
     
@@ -31,7 +43,7 @@ class TableListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = todoArray[indexPath.row]
+        cell.textLabel?.text = todoArray[indexPath.row].title
         return cell
     }
     
@@ -58,8 +70,10 @@ class TableListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add new todoey item", message: "", preferredStyle: .alert)
         
         let action = UIAlertAction(title: "Add item", style: .default) { action in
+            let newITem = Item()
+            newITem.title = textField.text!
             
-            self.todoArray.append(textField.text!)
+            self.todoArray.append(newITem)
             
             self.defaults.set(self.todoArray, forKey: "todoArray")
             
