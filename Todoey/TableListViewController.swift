@@ -20,6 +20,15 @@ class TableListViewController: UITableViewController {
         return todoArray.count
     }
     
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        
+        cell.textLabel?.text = todoArray[indexPath.row]
+        
+        return cell
+    }
+    
 
 
 }
