@@ -11,14 +11,14 @@ import UIKit
 class TableListViewController: UITableViewController {
     
     var todoArray = [Item]()
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
-    let defaults = UserDefaults.standard
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        if let items = self.defaults.array(forKey: "todoArray") as? [String] {
-        //            self.todoArray = items
-        //        }
+        
+        print(self.dataFilePath!)
         
         let newItem = Item()
         newItem.title = "Find Mike"
@@ -61,7 +61,7 @@ class TableListViewController: UITableViewController {
         
         todoArray[indexPath.row].done = !todoArray[indexPath.row].done
         
-        tableView.reloadData()
+        saveTodoData()
     }
     
     //MARK Add new items
@@ -78,9 +78,7 @@ class TableListViewController: UITableViewController {
             
             self.todoArray.append(newITem)
             
-            self.defaults.set(self.todoArray, forKey: "todoArray")
-            
-            self.tableView.reloadData()
+            self.saveTodoData()
             
         }
         
@@ -92,6 +90,20 @@ class TableListViewController: UITableViewController {
         alert.addAction(action)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    func saveTodoData() {
+        let encoder = PropertyListEncoder()
+        do {
+            
+            let data = try encoder.encode(todoArray)
+            try data.write(to: dataFilePath!)
+            
+            self.tableView.reloadData()
+            
+        } catch {
+            print("error encoding data \(error)")
+        }
     }
     
 }
