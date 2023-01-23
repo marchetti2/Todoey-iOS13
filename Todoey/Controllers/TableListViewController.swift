@@ -17,21 +17,7 @@ class TableListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print(self.dataFilePath!)
-        
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        
-        let newItem2 = Item()
-        newItem2.title = "buy eggos"
-        
-        let newItem3 = Item()
-        newItem3.title = "Destroy Demogorgon"
-        
-        todoArray.append(newItem)
-        todoArray.append(newItem2)
-        todoArray.append(newItem3)
+        loadTodoData()
     }
     
     //MARK UITableViewDataSource
@@ -92,6 +78,8 @@ class TableListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    //MARK Model Manipulation Data
+    
     func saveTodoData() {
         let encoder = PropertyListEncoder()
         do {
@@ -103,6 +91,17 @@ class TableListViewController: UITableViewController {
             
         } catch {
             print("error encoding data \(error)")
+        }
+    }
+    
+    func loadTodoData() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                todoArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("error decoding data \(error)")
+            }
         }
     }
     
