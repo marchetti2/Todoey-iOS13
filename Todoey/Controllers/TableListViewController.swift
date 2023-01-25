@@ -20,7 +20,7 @@ class TableListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        loadTodoData()
+        loadTodoData()
     }
     
     //MARK UITableViewDataSource
