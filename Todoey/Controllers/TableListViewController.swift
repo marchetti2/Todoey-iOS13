@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TableListViewController: UITableViewController {
     
@@ -96,16 +97,13 @@ class TableListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-    //    func loadTodoData() {
-    //        if let data = try? Data(contentsOf: dataFilePath!) {
-    //            let decoder = PropertyListDecoder()
-    //            do {
-    //                todoArray = try decoder.decode([Item].self, from: data)
-    //            } catch {
-    //                print("error decoding data \(error)")
-    //            }
-    //        }
-    //    }
-    
+        func loadTodoData() {
+            let request: NSFetchRequest<Item> = Item.fetchRequest()
+            do {
+                try context.fetch(request)
+            } catch {
+                print("error fetching data from context \(error)")
+            }
+        }
 }
 
