@@ -100,7 +100,7 @@ class TableListViewController: UITableViewController {
         func loadTodoData() {
             let request: NSFetchRequest<Item> = Item.fetchRequest()
             do {
-                try context.fetch(request)
+               todoArray = try context.fetch(request)
             } catch {
                 print("error fetching data from context \(error)")
             }
