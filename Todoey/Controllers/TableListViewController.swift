@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TableListViewController: UITableViewController {
+class TableListViewController: UITableViewController{
     
     var todoArray = [Item]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -22,7 +22,7 @@ class TableListViewController: UITableViewController {
         loadTodoData()
     }
     
-    //MARK UITableViewDataSource
+//MARK: UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todoArray.count
@@ -41,7 +41,7 @@ class TableListViewController: UITableViewController {
         return cell
     }
     
-    //MARK UITableViewDelegate
+//MARK: UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -52,7 +52,7 @@ class TableListViewController: UITableViewController {
         saveTodoData()
     }
     
-    //MARK Add new items
+//MARK: Add new items
     
     @IBAction func addTodo(_ sender: UIBarButtonItem) {
         
@@ -83,7 +83,7 @@ class TableListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    //MARK Model Manipulation Data
+//MARK: Model Manipulation Data
     
     func saveTodoData() {
         
@@ -96,13 +96,33 @@ class TableListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-        func loadTodoData() {
-            let request: NSFetchRequest<Item> = Item.fetchRequest()
-            do {
-               todoArray = try context.fetch(request)
-            } catch {
-                print("error fetching data from context \(error)")
-            }
+    func loadTodoData(request: NSFetchRequest<Item> = Item.fetchRequest()) {
+        do {
+            todoArray = try context.fetch(request)
+        } catch {
+            print("error fetching data from context \(error)")
         }
+        
+        tableView.reloadData()
+    }
 }
 
+//MARK: Search bar methods
+
+extension TableListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.predicate = predicate
+        
+        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+        
+        request.sortDescriptors = [sortDescriptor]
+        
+        loadTodoData(request: request)
+    }
+}
