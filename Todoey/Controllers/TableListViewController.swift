@@ -22,7 +22,7 @@ class TableListViewController: UITableViewController{
         loadTodoData()
     }
     
-//MARK: UITableViewDataSource
+    //MARK: UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todoArray.count
@@ -41,7 +41,7 @@ class TableListViewController: UITableViewController{
         return cell
     }
     
-//MARK: UITableViewDelegate
+    //MARK: UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -52,7 +52,7 @@ class TableListViewController: UITableViewController{
         saveTodoData()
     }
     
-//MARK: Add new items
+    //MARK: Add new items
     
     @IBAction func addTodo(_ sender: UIBarButtonItem) {
         
@@ -83,7 +83,7 @@ class TableListViewController: UITableViewController{
         present(alert, animated: true, completion: nil)
     }
     
-//MARK: Model Manipulation Data
+    //MARK: Model Manipulation Data
     
     func saveTodoData() {
         
@@ -124,5 +124,15 @@ extension TableListViewController: UISearchBarDelegate {
         request.sortDescriptors = [sortDescriptor]
         
         loadTodoData(request: request)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadTodoData()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
     }
 }
