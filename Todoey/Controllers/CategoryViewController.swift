@@ -48,6 +48,14 @@ class CategoryViewController: UITableViewController {
         
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! TableListViewController
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = categories[indexPath.row]
+        }
+    }
+    
     
     @IBAction func addCategory(_ sender: UIBarButtonItem) {
         var textField = UITextField()

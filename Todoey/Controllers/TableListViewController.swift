@@ -12,14 +12,19 @@ import CoreData
 class TableListViewController: UITableViewController{
     
     var todoArray = [Item]()
+    var selectedCategory: Category? {
+        didSet {
+            loadTodoData()
+        }
+    }
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        loadTodoData()
+        
+        print(self.selectedCategory)
     }
     
     //MARK: UITableViewDataSource
@@ -62,12 +67,13 @@ class TableListViewController: UITableViewController{
         
         let action = UIAlertAction(title: "Add item", style: .default) { action in
             
-            let newITem = Item(context: self.context)
+            let newItem = Item(context: self.context)
             
-            newITem.title = textField.text!
-            newITem.done = false
+            newItem.title = textField.text!
+            newItem.done = false
+            newItem.parentCategory = self.selectedCategory
             
-            self.todoArray.append(newITem)
+            self.todoArray.append(newItem)
             
             self.saveTodoData()
             
@@ -96,7 +102,16 @@ class TableListViewController: UITableViewController{
         self.tableView.reloadData()
     }
     
-    func loadTodoData(request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadTodoData(request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
         do {
             todoArray = try context.fetch(request)
         } catch {
@@ -123,7 +138,7 @@ extension TableListViewController: UISearchBarDelegate {
         
         request.sortDescriptors = [sortDescriptor]
         
-        loadTodoData(request: request)
+        loadTodoData(request: request, predicate: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
