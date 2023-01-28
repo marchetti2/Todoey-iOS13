@@ -16,33 +16,30 @@ class CategoryViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        loadCategories()
         
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        loadData()
     }
     
-//MARK: UITableViewDataSource
+    //MARK: - UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
     
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        let category = categories[indexPath.row]
+        cell.textLabel?.text = categories[indexPath.row].name
         
-        cell.textLabel?.text = category.name
-                
         return cell
     }
     
-//MARK: UITableViewDelegate
+    //MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
         
         performSegue(withIdentifier: "GoToItem", sender: self)
         
@@ -56,6 +53,7 @@ class CategoryViewController: UITableViewController {
         }
     }
     
+    //MARK: - Add New Categories
     
     @IBAction func addCategory(_ sender: UIBarButtonItem) {
         var textField = UITextField()
@@ -70,7 +68,7 @@ class CategoryViewController: UITableViewController {
             
             self.categories.append(newCategory)
             
-            self.saveData()
+            self.saveCategories()
             
         }
         
@@ -85,9 +83,9 @@ class CategoryViewController: UITableViewController {
         
     }
     
-//MARK: Model Manipulation Data
+    //MARK: - Model Manipulation Data
     
-    func saveData() {
+    func saveCategories() {
         
         do {
             try context.save()
@@ -95,10 +93,10 @@ class CategoryViewController: UITableViewController {
             print("error saving context \(error)")
         }
         
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
-    func loadData(request: NSFetchRequest<Category> = Category.fetchRequest()) {
+    func loadCategories(request: NSFetchRequest<Category> = Category.fetchRequest()) {
         do {
             categories = try context.fetch(request)
         } catch {

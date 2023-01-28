@@ -14,20 +14,16 @@ class TableListViewController: UITableViewController{
     var todoArray = [Item]()
     var selectedCategory: Category? {
         didSet {
-            loadTodoData()
+            loadItems()
         }
     }
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print(self.selectedCategory)
     }
     
-    //MARK: UITableViewDataSource
+    //MARK: - UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todoArray.count
@@ -46,7 +42,7 @@ class TableListViewController: UITableViewController{
         return cell
     }
     
-    //MARK: UITableViewDelegate
+    //MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -54,18 +50,18 @@ class TableListViewController: UITableViewController{
         
         todoArray[indexPath.row].done = !todoArray[indexPath.row].done
         
-        saveTodoData()
+        saveItems()
     }
     
-    //MARK: Add new items
+    //MARK: - Add new items
     
     @IBAction func addTodo(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
         
-        let alert = UIAlertController(title: "Add new todoey item", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add new item", message: "", preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "Add item", style: .default) { action in
+        let action = UIAlertAction(title: "Add", style: .default) { action in
             
             let newItem = Item(context: self.context)
             
@@ -75,7 +71,7 @@ class TableListViewController: UITableViewController{
             
             self.todoArray.append(newItem)
             
-            self.saveTodoData()
+            self.saveItems()
             
         }
         
@@ -89,9 +85,9 @@ class TableListViewController: UITableViewController{
         present(alert, animated: true, completion: nil)
     }
     
-//MARK: Model Manipulation Data
+    //MARK: - Model Manipulation Data
     
-    func saveTodoData() {
+    func saveItems() {
         
         do {
             try context.save()
@@ -99,10 +95,10 @@ class TableListViewController: UITableViewController{
             print("error saving context \(error)")
         }
         
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
-    func loadTodoData(request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
+    func loadItems(request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
         
         let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
         
@@ -120,9 +116,10 @@ class TableListViewController: UITableViewController{
         
         tableView.reloadData()
     }
+    
 }
 
-//MARK: Search bar methods
+//MARK: - Search bar methods
 
 extension TableListViewController: UISearchBarDelegate {
     
@@ -138,12 +135,12 @@ extension TableListViewController: UISearchBarDelegate {
         
         request.sortDescriptors = [sortDescriptor]
         
-        loadTodoData(request: request, predicate: predicate)
+        loadItems(request: request, predicate: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
-            loadTodoData()
+            loadItems()
             
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
